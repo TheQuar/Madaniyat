@@ -81,15 +81,16 @@ public class QTypeFragment extends Fragment implements QTypeAdapter.ItemClickLis
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
         bundle.putString("title", title);
-        QFragment qFragment = new QFragment();
-        qFragment.setArguments(bundle);
+        if (type == DataType.QType.TEST) {
+            QFragment qFragment = new QFragment();
+            qFragment.setArguments(bundle);
+            openFragment(qFragment);
+        } else {
+            PFragment pFragment = new PFragment();
+            pFragment.setArguments(bundle);
+            openFragment(pFragment);
+        }
 
-        getActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_controller, qFragment)
-                .addToBackStack("back")
-                .commit();
     }
 
     @Override
@@ -120,5 +121,14 @@ public class QTypeFragment extends Fragment implements QTypeAdapter.ItemClickLis
     public void onDestroyView() {
         super.onDestroyView();
         MainActivity.title.setText("DIAGNOSTIK MADANIYAT");
+    }
+
+    private void openFragment(Fragment fragment) {
+        getActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_controller, fragment)
+                .addToBackStack("back")
+                .commit();
     }
 }

@@ -20,7 +20,7 @@ public interface ApiInterface {
     @GET("site/api-form-type")
     Call<List<QTypeResponse>> getPollType();
 
-    @GET("site/site/api-form")
+    @GET("site/api-form")
     Call<List<PResponse>> getPoll(@Query("type_id") int type_id);
 
 }

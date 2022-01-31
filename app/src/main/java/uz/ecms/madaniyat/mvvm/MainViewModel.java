@@ -1,5 +1,7 @@
 package uz.ecms.madaniyat.mvvm;
 
+import android.util.Log;
+
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import uz.ecms.madaniyat.config.DataType;
+import uz.ecms.madaniyat.models.PResponse;
 import uz.ecms.madaniyat.models.QResponse;
 import uz.ecms.madaniyat.models.QTypeResponse;
 import uz.ecms.madaniyat.network.RestAdapter;
@@ -16,6 +19,7 @@ import uz.ecms.madaniyat.network.RestAdapter;
 public class MainViewModel extends ViewModel {
     public QTypeListener qTypeListener;
     public QListener qListener;
+    public PListener pListener;
 
     public void getQPList(DataType.QType type) {
         switch (type) {
@@ -76,6 +80,26 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onFailure(Call<List<QResponse>> call, Throwable t) {
                 qListener.onFailure(t);
+            }
+        });
+    }
+
+    public void getPoll(int id){
+        Log.d("Quar_log", "id:"+id);
+        pListener.onStarted();
+        RestAdapter.create().getPoll(id).enqueue(new Callback<List<PResponse>>() {
+            @Override
+            public void onResponse(Call<List<PResponse>> call, Response<List<PResponse>> response) {
+                if (response.isSuccessful()) {
+                    pListener.onFinished(response.body());
+                } else {
+                    pListener.onFailure(new Throwable("error response"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<PResponse>> call, Throwable t) {
+                pListener.onFailure(t);
             }
         });
     }
